@@ -1,0 +1,15 @@
+# Render.com blueprint — deploy a permanent, always-on public site.
+# 1. Push this folder to a GitHub repo.
+# 2. On render.com -> New -> Blueprint -> pick the repo. Render reads this file.
+# Render sets the PORT env var automatically; server.py already honors it.
+services:
+  - type: web
+    name: cryptochat
+    runtime: python
+    plan: free
+    buildCommand: ""          # nothing to build — stdlib only
+    startCommand: "python3 server.py"
+    healthCheckPath: /
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
