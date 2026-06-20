@@ -1,14 +1,20 @@
 # Render.com blueprint — deploy a permanent, always-on public site.
+#
+# Uses the DOCKER runtime (not native Python) because CryptoChat has zero
+# Python dependencies. Render's native Python runtime expects a requirements.txt
+# and can hang/fail without one; Docker avoids that entirely.
+#
+# Steps:
 # 1. Push this folder to a GitHub repo.
-# 2. On render.com -> New -> Blueprint -> pick the repo. Render reads this file.
-# Render sets the PORT env var automatically; server.py already honors it.
+# 2. render.com -> New -> Blueprint -> pick the repo. Render reads this file
+#    and builds the included Dockerfile.
+# Render injects the PORT env var at runtime; server.py already honors it.
 services:
   - type: web
     name: cryptochat
-    runtime: python
+    runtime: docker
+    dockerfilePath: ./Dockerfile
     plan: free
-    buildCommand: ""          # nothing to build — stdlib only
-    startCommand: "python3 server.py"
     healthCheckPath: /
     envVars:
       - key: HOST
